@@ -1,0 +1,73 @@
+basePath: /
+definitions:
+  dto.AddCustomerRequestDto:
+    properties:
+      cpf:
+        example: 12345678901
+        type: integer
+      email:
+        example: john@doe.com
+        type: string
+      name:
+        example: John Doe
+        type: string
+    type: object
+  dto.GetCustomerResponseDto:
+    properties:
+      cpf:
+        type: integer
+      created_at:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Api to manage a fast food restaurant
+  title: Tc-Fiap-50
+  version: "1.0"
+paths:
+  /v1/customer:
+    get:
+      consumes:
+      - application/json
+      description: Get customer by CPF
+      parameters:
+      - description: CPF
+        in: query
+        name: cpf
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetCustomerResponseDto'
+      summary: Get customer
+      tags:
+      - Customer
+    post:
+      consumes:
+      - application/json
+      description: Add customer
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddCustomerRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      summary: Add customer
+      tags:
+      - Customer
+swagger: "2.0"
