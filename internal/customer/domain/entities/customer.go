@@ -3,6 +3,7 @@ package entities
 import "time"
 
 type Customer struct {
+	ID        string    `json:"id" dynamodbav:"ID"`
 	CPF       uint      `json:"cpf" dynamodbav:"CPF"`
 	Name      string    `json:"name" dynamodbav:"Name"`
 	Email     string    `json:"email" dynamodbav:"Email"`

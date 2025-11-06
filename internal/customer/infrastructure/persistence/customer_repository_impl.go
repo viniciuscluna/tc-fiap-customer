@@ -56,6 +56,8 @@ func (r *CustomerRepositoryImpl) GetByCpf(cpf uint) (*entities.Customer, error) 
 func (r *CustomerRepositoryImpl) Add(customer *entities.Customer) error {
 	tableName := "Customer"
 
+	// Generate UUID for ID
+	customer.ID = generateUUID()
 	// Set created timestamp
 	customer.CreatedAt = time.Now()
 
@@ -76,4 +78,9 @@ func (r *CustomerRepositoryImpl) Add(customer *entities.Customer) error {
 	}
 
 	return nil
+}
+
+// generateUUID generates a simple UUID-like string
+func generateUUID() string {
+	return fmt.Sprintf("%d-%d", time.Now().UnixNano(), time.Now().Unix())
 }

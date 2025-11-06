@@ -18,6 +18,7 @@ func NewCustomerPresenterImpl() *CustomerPresenterImpl {
 
 func (p *CustomerPresenterImpl) Present(customer *entities.Customer) *dto.GetCustomerResponseDto {
 	return &dto.GetCustomerResponseDto{
+		ID:        customer.ID,
 		CreatedAt: customer.CreatedAt,
 		Name:      customer.Name,
 		CPF:       customer.CPF,
