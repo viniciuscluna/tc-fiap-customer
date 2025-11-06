@@ -1,0 +1,34 @@
+with-expecter: true
+mockname: "Mock{{.InterfaceName}}"
+filename: "{{.InterfaceName}}.go"
+packages:
+  github.com/viniciuscluna/tc-fiap-customer/internal/customer/domain/repositories:
+    config:
+      dir: "mocks/customer/domain/repositories"
+      outpkg: mocks
+    interfaces:
+      CustomerRepository:
+  github.com/viniciuscluna/tc-fiap-customer/internal/customer/presenter:
+    config:
+      dir: "mocks/customer/presenter"
+      outpkg: mocks
+    interfaces:
+      CustomerPresenter:
+  github.com/viniciuscluna/tc-fiap-customer/internal/customer/usecase/addCustomer:
+    config:
+      dir: "mocks/customer/usecase/addCustomer"
+      outpkg: mocks
+    interfaces:
+      AddCustomerUseCase:
+  github.com/viniciuscluna/tc-fiap-customer/internal/customer/usecase/getbycpf:
+    config:
+      dir: "mocks/customer/usecase/getbycpf"
+      outpkg: mocks
+    interfaces:
+      GetByCpfUseCase:
+  github.com/viniciuscluna/tc-fiap-customer/internal/customer/controller:
+    config:
+      dir: "mocks/customer/controller"
+      outpkg: mocks
+    interfaces:
+      CustomerController:

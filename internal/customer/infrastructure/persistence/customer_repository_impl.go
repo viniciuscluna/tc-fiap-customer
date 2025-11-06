@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/viniciuscluna/tc-fiap-customer/internal/customer/domain/entities"
 	"github.com/viniciuscluna/tc-fiap-customer/internal/customer/domain/repositories"
 	dynamodbpkg "github.com/viniciuscluna/tc-fiap-customer/pkg/storage/dynamodb"
@@ -18,10 +19,10 @@ var (
 )
 
 type CustomerRepositoryImpl struct {
-	db *dynamodb.DynamoDB
+	db dynamodbiface.DynamoDBAPI
 }
 
-func NewCustomerRepositoryImpl(db *dynamodb.DynamoDB) *CustomerRepositoryImpl {
+func NewCustomerRepositoryImpl(db dynamodbiface.DynamoDBAPI) *CustomerRepositoryImpl {
 	return &CustomerRepositoryImpl{db: db}
 }
 

@@ -38,21 +38,28 @@ func (h *customerApiController) Get(w http.ResponseWriter, r *http.Request) {
 	cpf := r.URL.Query().Get("cpf")
 
 	if cpf == "" {
-		http.Error(w, "Invalid parameter", http.StatusBadRequest)
+		http.Error(w, `{"error":"Invalid CPF parameter"}`, http.StatusBadRequest)
+		return
 	}
 
 	cpfInt, err := strconv.ParseUint(cpf, 10, 64)
 	if err != nil {
-		http.Error(w, "Invalid cpf parameter", http.StatusBadRequest)
+		http.Error(w, `{"error":"Invalid CPF format"}`, http.StatusBadRequest)
 		return
 	}
 
 	customer, err := h.controller.GetByCpf(uint(cpfInt))
 
 	if err != nil {
-		http.Error(w, "Error processing request", http.StatusInternalServerError)
+		if err.Error() == "customer not found" {
+			http.Error(w, `{"error":"Customer not found"}`, http.StatusNotFound)
+			return
+		}
+		http.Error(w, `{"error":"Error processing request"}`, http.StatusInternalServerError)
+		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(customer)
 }
@@ -63,20 +70,24 @@ func (h *customerApiController) Get(w http.ResponseWriter, r *http.Request) {
 // @Accept      json
 // @Produce     json
 // @Param       body body dto.AddCustomerRequestDto true "Body"
-// @Success     201
+// @Success     201  {object} map[string]string
 // @Router      /v1/customer [post]
 func (h *customerApiController) Add(w http.ResponseWriter, r *http.Request) {
 	var customerRequest dto.AddCustomerRequestDto
 
 	if err := json.NewDecoder(r.Body).Decode(&customerRequest); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		http.Error(w, `{"error":"Invalid request payload"}`, http.StatusBadRequest)
+		return
 	}
 
 	err := h.controller.Add(&customerRequest)
 
 	if err != nil {
-		http.Error(w, "Error processing request", http.StatusInternalServerError)
+		http.Error(w, `{"error":"Error processing request"}`, http.StatusInternalServerError)
+		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Customer created successfully"})
 }
