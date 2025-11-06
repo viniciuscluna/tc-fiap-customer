@@ -10,6 +10,11 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
+// Table names constants
+const (
+	CustomerTableName = "Customer"
+)
+
 // NewDynamoDBClient creates and returns a new DynamoDB client
 func NewDynamoDBClient() *dynamodb.DynamoDB {
 	// Get AWS configuration from environment variables
@@ -61,21 +66,19 @@ func NewDynamoDBClient() *dynamodb.DynamoDB {
 
 // ensureTableExists creates the Customer table if it doesn't exist
 func ensureTableExists(svc *dynamodb.DynamoDB) {
-	tableName := "Customer"
-
 	// Check if table exists
 	_, err := svc.DescribeTable(&dynamodb.DescribeTableInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(CustomerTableName),
 	})
 
 	if err == nil {
-		log.Printf("Table %s already exists\n", tableName)
+		log.Printf("Table %s already exists\n", CustomerTableName)
 		return
 	}
 
 	// Create table
 	input := &dynamodb.CreateTableInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(CustomerTableName),
 		AttributeDefinitions: []*dynamodb.AttributeDefinition{
 			{
 				AttributeName: aws.String("CPF"),
@@ -93,9 +96,9 @@ func ensureTableExists(svc *dynamodb.DynamoDB) {
 
 	_, err = svc.CreateTable(input)
 	if err != nil {
-		log.Printf("Warning: Failed to create table %s: %v\n", tableName, err)
+		log.Printf("Warning: Failed to create table %s: %v\n", CustomerTableName, err)
 		return
 	}
 
-	log.Printf("Table %s created successfully\n", tableName)
+	log.Printf("Table %s created successfully\n", CustomerTableName)
 }

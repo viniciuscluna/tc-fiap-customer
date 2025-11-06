@@ -9,7 +9,3 @@ type Customer struct {
 	Email     string    `json:"email" dynamodbav:"Email"`
 	CreatedAt time.Time `json:"created_at" dynamodbav:"CreatedAt"`
 }
-
-func (Customer) TableName() string {
-	return "Customer"
-}

@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/viniciuscluna/tc-fiap-customer/internal/customer/domain/entities"
 	"github.com/viniciuscluna/tc-fiap-customer/internal/customer/domain/repositories"
+	dynamodbpkg "github.com/viniciuscluna/tc-fiap-customer/pkg/storage/dynamodb"
 )
 
 var (
@@ -25,10 +26,8 @@ func NewCustomerRepositoryImpl(db *dynamodb.DynamoDB) *CustomerRepositoryImpl {
 }
 
 func (r *CustomerRepositoryImpl) GetByCpf(cpf uint) (*entities.Customer, error) {
-	tableName := "Customer"
-
 	result, err := r.db.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(dynamodbpkg.CustomerTableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"CPF": {
 				N: aws.String(strconv.FormatUint(uint64(cpf), 10)),
@@ -54,8 +53,6 @@ func (r *CustomerRepositoryImpl) GetByCpf(cpf uint) (*entities.Customer, error) 
 }
 
 func (r *CustomerRepositoryImpl) Add(customer *entities.Customer) error {
-	tableName := "Customer"
-
 	// Generate UUID for ID
 	customer.ID = generateUUID()
 	// Set created timestamp
@@ -69,7 +66,7 @@ func (r *CustomerRepositoryImpl) Add(customer *entities.Customer) error {
 
 	// Put item in DynamoDB
 	_, err = r.db.PutItem(&dynamodb.PutItemInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(dynamodbpkg.CustomerTableName),
 		Item:      av,
 	})
 
