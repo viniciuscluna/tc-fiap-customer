@@ -1,5 +1,12 @@
 # Tech Challenge - Customer Microservice
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=coverage)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer)
+
 Bem-vindo ao projeto Tech Challenge - Customer Microservice! Este microserviço é responsável pelo gerenciamento de clientes do sistema de restaurante.
 
 ## Índice
@@ -10,6 +17,8 @@ Bem-vindo ao projeto Tech Challenge - Customer Microservice! Este microserviço 
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Configuração](#configuracao)
 - [Uso](#uso)
+- [Testes com BDD](#testes-com-bdd)
+- [Qualidade de Código](#qualidade-de-código)
 - [Migração PostgreSQL → DynamoDB](#migracao)
 
 ## Sobre
@@ -210,11 +219,40 @@ Este projeto implementa **Behavior-Driven Development (BDD)** usando [testify/su
 go test ./internal/customer/... -v
 ```
 
-### Documentação Completa
 
-Veja [BDD_TESTING_GUIDE.md](BDD_TESTING_GUIDE.md) para:
-- Padrão completo de Given/When/Then
-- Convenção de nomenclatura
-- Melhores práticas
-- Exemplos por camada
-- Debugging de testes
+## Qualidade de Código
+
+Este projeto utiliza **SonarCloud** para análise contínua de qualidade de código, segurança e cobertura de testes.
+
+### Métricas Monitoradas
+
+| Métrica | Status | Objetivo |
+|---------|--------|----------|
+| **Quality Gate** | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer) | ✅ Passed |
+| **Coverage** | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=coverage)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer) | ≥ 80% |
+| **Bugs** | [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer) | 0 |
+| **Code Smells** | [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer) | < 10 |
+| **Security** | [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=viniciuscluna_tc-fiap-customer&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=viniciuscluna_tc-fiap-customer) | A |
+
+### Análise Automática
+
+A análise de código é executada automaticamente via **GitHub Actions** em:
+- ✅ Cada push para branches `main` e `develop`
+- ✅ Todos os Pull Requests
+
+### Gerar Coverage Localmente
+
+**Windows (PowerShell):**
+```powershell
+.\scripts\coverage.ps1
+```
+
+**Linux/Mac (Bash):**
+```bash
+chmod +x scripts/coverage.sh
+./scripts/coverage.sh
+```
+
+Isso gera:
+- `coverage.out` - Formato para SonarCloud
+- `coverage.html` - Visualização no browser
