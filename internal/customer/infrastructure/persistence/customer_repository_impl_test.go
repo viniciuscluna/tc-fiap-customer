@@ -51,8 +51,11 @@ func TestCustomerRepositoryTestSuite(t *testing.T) {
 	suite.Run(t, new(CustomerRepositoryTestSuite))
 }
 
-func (suite *CustomerRepositoryTestSuite) TestGetByCpf_Success() {
-	// Arrange
+// Feature: Customer Repository - Persistence Layer
+// Scenario: Retrieve customer data from DynamoDB
+
+func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithExistingCPF_ShouldReturnCustomerFromDynamoDB() {
+	// GIVEN a customer exists in DynamoDB with CPF 12345678901
 	cpf := uint(12345678901)
 	expectedCustomer := &entities.Customer{
 		ID:    "test-id-123",
@@ -72,21 +75,23 @@ func (suite *CustomerRepositoryTestSuite) TestGetByCpf_Success() {
 
 	suite.mockDB.On("GetItem", mock.Anything).Return(output, nil).Once()
 
-	// Act
+	// WHEN retrieving the customer by CPF from the repository
 	result, err := suite.repository.GetByCpf(cpf)
 
-	// Assert
+	// THEN the customer should be found without errors
 	assert.NoError(suite.T(), err)
 	assert.NotNil(suite.T(), result)
+	// AND all customer details should match
 	assert.Equal(suite.T(), expectedCustomer.ID, result.ID)
 	assert.Equal(suite.T(), expectedCustomer.CPF, result.CPF)
 	assert.Equal(suite.T(), expectedCustomer.Name, result.Name)
 	assert.Equal(suite.T(), expectedCustomer.Email, result.Email)
+	// AND DynamoDB GetItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
 
-func (suite *CustomerRepositoryTestSuite) TestGetByCpf_NotFound() {
-	// Arrange
+func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithNonExistentCPF_ShouldReturnNotFoundError() {
+	// GIVEN a CPF for a customer that does not exist in DynamoDB
 	cpf := uint(99999999999)
 	output := &dynamodb.GetItemOutput{
 		Item: nil, // Empty result
@@ -94,36 +99,46 @@ func (suite *CustomerRepositoryTestSuite) TestGetByCpf_NotFound() {
 
 	suite.mockDB.On("GetItem", mock.Anything).Return(output, nil).Once()
 
-	// Act
+	// WHEN retrieving the customer by CPF from the repository
 	result, err := suite.repository.GetByCpf(cpf)
 
-	// Assert
+	// THEN an error should be returned
 	assert.Error(suite.T(), err)
+	// AND no customer should be returned
 	assert.Nil(suite.T(), result)
+	// AND the error should indicate customer not found
 	assert.Contains(suite.T(), err.Error(), "customer not found")
+	// AND DynamoDB GetItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
 
-func (suite *CustomerRepositoryTestSuite) TestGetByCpf_DynamoDBError() {
-	// Arrange
+func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithDynamoDBError_ShouldReturnError() {
+	// GIVEN a CPF for a customer lookup
 	cpf := uint(12345678901)
+	// AND DynamoDB encounters a connection error
 	expectedError := errors.New("DynamoDB connection error")
 
 	suite.mockDB.On("GetItem", mock.Anything).Return(nil, expectedError).Once()
 
-	// Act
+	// WHEN retrieving the customer by CPF from the repository
 	result, err := suite.repository.GetByCpf(cpf)
 
-	// Assert
+	// THEN an error should be returned
 	assert.Error(suite.T(), err)
+	// AND no customer should be returned
 	assert.Nil(suite.T(), result)
+	// AND the error should indicate the failure
 	assert.Contains(suite.T(), err.Error(), "failed to get customer")
 	assert.Contains(suite.T(), err.Error(), "DynamoDB connection error")
+	// AND DynamoDB GetItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
 
-func (suite *CustomerRepositoryTestSuite) TestAdd_Success() {
-	// Arrange
+// Feature: Customer Repository - Add Customer
+// Scenario: Persist a new customer to DynamoDB
+
+func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithValidCustomer_ShouldSaveToDynamoDBSuccessfully() {
+	// GIVEN a valid customer entity to be persisted
 	customer := &entities.Customer{
 		CPF:   12345678901,
 		Name:  "Jane Doe",
@@ -133,38 +148,43 @@ func (suite *CustomerRepositoryTestSuite) TestAdd_Success() {
 	output := &dynamodb.PutItemOutput{}
 	suite.mockDB.On("PutItem", mock.Anything).Return(output, nil).Once()
 
-	// Act
+	// WHEN adding the customer to the repository
 	err := suite.repository.Add(customer)
 
-	// Assert
+	// THEN the operation should complete without errors
 	assert.NoError(suite.T(), err)
-	assert.NotEmpty(suite.T(), customer.ID) // ID should be generated
+	// AND the customer should have been assigned a unique ID
+	assert.NotEmpty(suite.T(), customer.ID)
+	// AND DynamoDB PutItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
 
-func (suite *CustomerRepositoryTestSuite) TestAdd_DynamoDBError() {
-	// Arrange
+func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithDynamoDBError_ShouldReturnError() {
+	// GIVEN a valid customer entity to be persisted
 	customer := &entities.Customer{
 		CPF:   12345678901,
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
 	}
 
+	// AND DynamoDB encounters a write error
 	expectedError := errors.New("DynamoDB write error")
 	suite.mockDB.On("PutItem", mock.Anything).Return(nil, expectedError).Once()
 
-	// Act
+	// WHEN adding the customer to the repository
 	err := suite.repository.Add(customer)
 
-	// Assert
+	// THEN an error should be returned
 	assert.Error(suite.T(), err)
+	// AND the error should indicate the failure
 	assert.Contains(suite.T(), err.Error(), "failed to add customer")
 	assert.Contains(suite.T(), err.Error(), "DynamoDB write error")
+	// AND DynamoDB PutItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
 
-func (suite *CustomerRepositoryTestSuite) TestAdd_WithExistingID() {
-	// Arrange
+func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithProvidedID_ShouldGenerateNewID() {
+	// GIVEN a customer entity with an existing ID
 	customer := &entities.Customer{
 		ID:    "existing-id",
 		CPF:   12345678901,
@@ -175,13 +195,15 @@ func (suite *CustomerRepositoryTestSuite) TestAdd_WithExistingID() {
 	output := &dynamodb.PutItemOutput{}
 	suite.mockDB.On("PutItem", mock.Anything).Return(output, nil).Once()
 
-	// Act
+	// WHEN adding the customer to the repository
 	err := suite.repository.Add(customer)
 
-	// Assert
+	// THEN the operation should complete without errors
 	assert.NoError(suite.T(), err)
-	// Note: O repository sempre gera um novo ID, ignorando o existente
+	// AND the customer ID should be regenerated (not preserved)
 	assert.NotEqual(suite.T(), "existing-id", customer.ID)
-	assert.NotEmpty(suite.T(), customer.ID) // ID should be generated
+	// AND a new unique ID should have been assigned
+	assert.NotEmpty(suite.T(), customer.ID)
+	// AND DynamoDB PutItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }

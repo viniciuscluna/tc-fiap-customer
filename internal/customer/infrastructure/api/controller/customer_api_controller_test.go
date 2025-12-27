@@ -33,8 +33,11 @@ func TestCustomerApiControllerTestSuite(t *testing.T) {
 	suite.Run(t, new(CustomerApiControllerTestSuite))
 }
 
-func (suite *CustomerApiControllerTestSuite) TestGet_Success() {
-	// Arrange
+// Feature: Customer REST API - Get Endpoint
+// Scenario: Retrieve customer information via HTTP
+
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRetrieval_ViaGetEndpoint_WithValidCPF_ShouldReturnCustomerSuccessfully() {
+	// GIVEN a valid CPF parameter
 	cpf := "12345678901"
 	expectedResponse := &dto.GetCustomerResponseDto{
 		ID:    "test-id",
@@ -48,15 +51,14 @@ func (suite *CustomerApiControllerTestSuite) TestGet_Success() {
 		Return(expectedResponse, nil).
 		Once()
 
+	// WHEN a GET request is made to /v1/customer with valid CPF
 	req := httptest.NewRequest(http.MethodGet, "/v1/customer?cpf="+cpf, nil)
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 200 OK
 	assert.Equal(suite.T(), http.StatusOK, w.Code)
-
+	// AND the response body should contain the customer details
 	var response dto.GetCustomerResponseDto
 	err := json.NewDecoder(w.Body).Decode(&response)
 	assert.NoError(suite.T(), err)
@@ -66,34 +68,34 @@ func (suite *CustomerApiControllerTestSuite) TestGet_Success() {
 	assert.Equal(suite.T(), expectedResponse.Email, response.Email)
 }
 
-func (suite *CustomerApiControllerTestSuite) TestGet_InvalidCPF() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRetrieval_ViaGetEndpoint_WithInvalidCPFFormat_ShouldReturnBadRequest() {
+	// GIVEN an invalid CPF parameter
+	// WHEN a GET request is made to /v1/customer with invalid CPF
 	req := httptest.NewRequest(http.MethodGet, "/v1/customer?cpf=invalid", nil)
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 400 Bad Request
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
+	// AND the response should contain an error message about invalid CPF
 	assert.Contains(suite.T(), w.Body.String(), "Invalid CPF")
 }
 
-func (suite *CustomerApiControllerTestSuite) TestGet_MissingCPF() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRetrieval_ViaGetEndpoint_WithoutCPFParameter_ShouldReturnBadRequest() {
+	// GIVEN no CPF parameter provided
+	// WHEN a GET request is made to /v1/customer without CPF
 	req := httptest.NewRequest(http.MethodGet, "/v1/customer", nil)
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 400 Bad Request
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
+	// AND the response should contain an error message about invalid CPF
 	assert.Contains(suite.T(), w.Body.String(), "Invalid CPF")
 }
 
-func (suite *CustomerApiControllerTestSuite) TestGet_CustomerNotFound() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRetrieval_ViaGetEndpoint_WithNonExistentCPF_ShouldReturnNotFound() {
+	// GIVEN a CPF for a customer that does not exist
 	cpf := "99999999999"
 
 	suite.mockController.EXPECT().
@@ -101,18 +103,17 @@ func (suite *CustomerApiControllerTestSuite) TestGet_CustomerNotFound() {
 		Return(nil, errors.New("customer not found")).
 		Once()
 
+	// WHEN a GET request is made to /v1/customer with non-existent CPF
 	req := httptest.NewRequest(http.MethodGet, "/v1/customer?cpf="+cpf, nil)
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 404 Not Found
 	assert.Equal(suite.T(), http.StatusNotFound, w.Code)
 }
 
-func (suite *CustomerApiControllerTestSuite) TestGet_InternalError() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRetrieval_ViaGetEndpoint_WithRepositoryError_ShouldReturnInternalServerError() {
+	// GIVEN a valid CPF but the repository encounters a database error
 	cpf := "12345678901"
 
 	suite.mockController.EXPECT().
@@ -120,18 +121,20 @@ func (suite *CustomerApiControllerTestSuite) TestGet_InternalError() {
 		Return(nil, errors.New("database error")).
 		Once()
 
+	// WHEN a GET request is made to /v1/customer
 	req := httptest.NewRequest(http.MethodGet, "/v1/customer?cpf="+cpf, nil)
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 500 Internal Server Error
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
 }
 
-func (suite *CustomerApiControllerTestSuite) TestAdd_Success() {
-	// Arrange
+// Feature: Customer REST API - Post Endpoint
+// Scenario: Register a new customer via HTTP
+
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRegistration_ViaPostEndpoint_WithValidRequest_ShouldCreateCustomerSuccessfully() {
+	// GIVEN a valid customer registration request
 	requestDto := &dto.AddCustomerRequestDto{
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
@@ -143,39 +146,38 @@ func (suite *CustomerApiControllerTestSuite) TestAdd_Success() {
 		Return(nil).
 		Once()
 
+	// WHEN a POST request is made to /v1/customer with valid data
 	body, _ := json.Marshal(requestDto)
 	req := httptest.NewRequest(http.MethodPost, "/v1/customer", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 201 Created
 	assert.Equal(suite.T(), http.StatusCreated, w.Code)
-
+	// AND the response body should contain a success message
 	var response map[string]string
 	err := json.NewDecoder(w.Body).Decode(&response)
 	assert.NoError(suite.T(), err)
 	assert.Equal(suite.T(), "Customer created successfully", response["message"])
 }
 
-func (suite *CustomerApiControllerTestSuite) TestAdd_InvalidJSON() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRegistration_ViaPostEndpoint_WithInvalidJSON_ShouldReturnBadRequest() {
+	// GIVEN an invalid JSON request body
 	invalidJSON := []byte(`{"name": "John", "invalid}`)
+
+	// WHEN a POST request is made to /v1/customer with malformed JSON
 	req := httptest.NewRequest(http.MethodPost, "/v1/customer", bytes.NewBuffer(invalidJSON))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 400 Bad Request
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
 }
 
-func (suite *CustomerApiControllerTestSuite) TestAdd_ControllerError() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRegistration_ViaPostEndpoint_WithControllerError_ShouldReturnInternalServerError() {
+	// GIVEN a valid request but the controller encounters a validation error
 	requestDto := &dto.AddCustomerRequestDto{
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
@@ -187,27 +189,25 @@ func (suite *CustomerApiControllerTestSuite) TestAdd_ControllerError() {
 		Return(errors.New("validation error")).
 		Once()
 
+	// WHEN a POST request is made to /v1/customer
 	body, _ := json.Marshal(requestDto)
 	req := httptest.NewRequest(http.MethodPost, "/v1/customer", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 500 Internal Server Error
 	assert.Equal(suite.T(), http.StatusInternalServerError, w.Code)
 }
 
-func (suite *CustomerApiControllerTestSuite) TestAdd_EmptyBody() {
-	// Arrange
+func (suite *CustomerApiControllerTestSuite) Test_CustomerRegistration_ViaPostEndpoint_WithEmptyBody_ShouldReturnBadRequest() {
+	// GIVEN an empty request body
+	// WHEN a POST request is made to /v1/customer with no body
 	req := httptest.NewRequest(http.MethodPost, "/v1/customer", bytes.NewBuffer([]byte{}))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
-
-	// Act
 	suite.router.ServeHTTP(w, req)
 
-	// Assert
+	// THEN the response status should be 400 Bad Request
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
 }

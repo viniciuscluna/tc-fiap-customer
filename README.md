@@ -194,3 +194,27 @@ Os exemplos cobrem:
 - **Clientes**: Cadastro e consulta por CPF
 - **Pagamentos**: Processamento e consulta de status
 - **Webhooks**: Notificações do Mercado Pago
+
+## Testes com BDD
+
+Este projeto implementa **Behavior-Driven Development (BDD)** usando [testify/suite](https://pkg.go.dev/github.com/stretchr/testify/suite).
+
+- **25 testes** em 6 camadas (presenter, use case, controller, API, repositório)
+- Padrão **Given/When/Then** para clareza e legibilidade
+- Sem dependências extras - apenas testify
+- Testes descritivos que funcionam como documentação
+
+### Executar Testes
+
+```bash
+go test ./internal/customer/... -v
+```
+
+### Documentação Completa
+
+Veja [BDD_TESTING_GUIDE.md](BDD_TESTING_GUIDE.md) para:
+- Padrão completo de Given/When/Then
+- Convenção de nomenclatura
+- Melhores práticas
+- Exemplos por camada
+- Debugging de testes
