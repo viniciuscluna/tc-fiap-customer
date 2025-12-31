@@ -207,3 +207,30 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithProvidedI
 	// AND DynamoDB PutItem should have been called
 	suite.mockDB.AssertExpectations(suite.T())
 }
+
+func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithUnmarshalError_ShouldReturnError() {
+	// GIVEN a CPF for a customer lookup
+	cpf := uint(12345678901)
+
+	// AND DynamoDB returns an item with invalid structure for unmarshaling
+	// e.g. CPF is expected to be uint, but we return a complex map that can't be converted
+	output := &dynamodb.GetItemOutput{
+		Item: map[string]*dynamodb.AttributeValue{
+			"CPF": {M: map[string]*dynamodb.AttributeValue{}}, // Invalid type for uint
+		},
+	}
+
+	suite.mockDB.On("GetItem", mock.Anything).Return(output, nil).Once()
+
+	// WHEN retrieving the customer by CPF from the repository
+	result, err := suite.repository.GetByCpf(cpf)
+
+	// THEN an error should be returned
+	assert.Error(suite.T(), err)
+	// AND no customer should be returned
+	assert.Nil(suite.T(), result)
+	// AND the error should indicate unmarshal failure
+	assert.Contains(suite.T(), err.Error(), "failed to unmarshal customer")
+	// AND DynamoDB GetItem should have been called
+	suite.mockDB.AssertExpectations(suite.T())
+}
