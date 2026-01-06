@@ -28,7 +28,7 @@ env:
   AWS_REGION: us-east-1
   EKS_CLUSTER_NAME: tc-fiap-staging
   ECR_REGISTRY: 975049982271.dkr.ecr.us-east-1.amazonaws.com
-  ECR_REPOSITORY: tc-fiap-50
+  ECR_REPOSITORY: tc-fiap-customer
 
 jobs:
   # Planning and validation
@@ -169,7 +169,7 @@ jobs:
         # Deploy with new image
         IMAGE_TAG=$(echo "${{ needs.docker.outputs.image_tag }}" | tr ',' '\n' | head -n1 | xargs)
         echo "Using image: $IMAGE_TAG"
-        sed "s|975049982271.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-50:latest|$IMAGE_TAG|g" k8s/app-deployment.yaml > /tmp/app-final.yaml
+        sed "s|975049982271.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-customer:latest|$IMAGE_TAG|g" k8s/app-deployment.yaml > /tmp/app-final.yaml
         
         kubectl apply -f /tmp/app-final.yaml
         kubectl apply -f k8s/app-service.yaml
