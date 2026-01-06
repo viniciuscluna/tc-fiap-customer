@@ -256,3 +256,26 @@ chmod +x scripts/coverage.sh
 Isso gera:
 - `coverage.out` - Formato para SonarCloud
 - `coverage.html` - Visualização no browser
+## 🌐 Deploy no AWS Academy
+
+Este projeto está configurado para deploy no **AWS Academy** com DynamoDB. Consulte o guia completo:
+
+📚 **[AWS Academy Setup Guide](AWS_ACADEMY_SETUP.md)**
+
+### Quick Start AWS Academy
+
+1. **Criar tabela DynamoDB**:
+   ```bash
+   cd terraform
+   terraform init
+   terraform apply
+   ```
+
+2. **Configurar secrets no GitHub**:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_SESSION_TOKEN`
+
+3. **Deploy automático** via push para `main`
+
+⚠️ **Importante**: Credenciais AWS Academy expiram em ~3h e precisam ser renovadas periodicamente.

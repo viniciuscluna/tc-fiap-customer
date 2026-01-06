@@ -1,0 +1,6 @@
+# Exemplo de configuração para Terraform
+# Copie este arquivo para terraform.tfvars e ajuste os valores
+
+aws_region  = "us-east-1"
+table_name  = "Customer"
+environment = "staging"

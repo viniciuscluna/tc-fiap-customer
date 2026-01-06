@@ -26,56 +26,26 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DB_HOST
-              value: "tc-fiap-staging-postgres.c90ys0mko7jv.us-east-1.rds.amazonaws.com"
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_SSLMODE
-              value: "require"
-            - name: DB_USER
+            # AWS Configuration for DynamoDB
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: DB_PASSWORD
+                  name: aws-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: DB_NAME
+                  name: aws-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_SESSION_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_DB
+                  name: aws-credentials
+                  key: AWS_SESSION_TOKEN
+                  optional: true  # Opcional pois pode não existir fora do Academy
             
-            # Variáveis do Mercado Pago
-            - name: MERCADO_PAGO_BASEURL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_BASEURL
-            - name: MERCADO_PAGO_ACCESS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_ACCESS_TOKEN
-            - name: MERCADO_PAGO_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_CLIENT_ID
-            - name: MERCADO_PAGO_POS_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_POS_ID
-            - name: MERCADO_PAGO_WEBHOOK_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_WEBHOOK_SECRET
-            - name: MERCADO_PAGO_WEBHOOK_CALLBACK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secret
-                  key: MERCADO_PAGO_WEBHOOK_CALLBACK_URL
+            # DynamoDB Configuration (vazio para usar tabela real na AWS)
+            # - name: DYNAMODB_ENDPOINT
+            #   value: ""  # Não definir endpoint para usar DynamoDB real
