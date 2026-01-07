@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: my-app-container
-          image: 975049982271.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-customer:latest
+          image: 687620679899.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-customer:latest
           imagePullPolicy: Always
           resources:
             requests:

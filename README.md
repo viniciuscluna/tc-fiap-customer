@@ -256,26 +256,115 @@ chmod +x scripts/coverage.sh
 Isso gera:
 - `coverage.out` - Formato para SonarCloud
 - `coverage.html` - Visualização no browser
-## 🌐 Deploy no AWS Academy
 
-Este projeto está configurado para deploy no **AWS Academy** com DynamoDB. Consulte o guia completo:
+## 🚀 Deploy na AWS
 
-📚 **[AWS Academy Setup Guide](AWS_ACADEMY_SETUP.md)**
+Este projeto usa **EC2 t2.micro** com Docker para deploy na AWS Academy.
 
-### Quick Start AWS Academy
+### Setup Inicial
 
-1. **Criar tabela DynamoDB**:
+1. **Configure credenciais AWS Academy**:
+   ```powershell
+   # Copie do AWS Academy → AWS Details → Show
+   $env:AWS_ACCESS_KEY_ID="ASIA..."
+   $env:AWS_SECRET_ACCESS_KEY="..."
+   $env:AWS_SESSION_TOKEN="..."
+   $env:AWS_DEFAULT_REGION="us-east-1"
+   ```
+
+2. **Crie arquivo com credenciais** (terraform/terraform.tfvars):
+   ```hcl
+   aws_access_key_id     = "ASIA..."
+   aws_secret_access_key = "..."
+   aws_session_token     = "..."
+   ```
+
+3. **Crie a infraestrutura**:
    ```bash
    cd terraform
    terraform init
    terraform apply
    ```
+   
+   Isso cria:
+   - ✅ Tabela DynamoDB `Customer`
+   - ✅ Repositório ECR `tc-fiap-customer`
+   - ✅ EC2 t2.micro com Docker
+   - ✅ Security Group (portas 8080 e 22)
 
-2. **Configurar secrets no GitHub**:
+4. **Configure GitHub Secrets**:
+   
+   Em **Settings → Secrets and variables → Actions**, adicione:
    - `AWS_ACCESS_KEY_ID`
    - `AWS_SECRET_ACCESS_KEY`
    - `AWS_SESSION_TOKEN`
 
-3. **Deploy automático** via push para `main`
+### Acessar a aplicação
+
+Após o `terraform apply`, copie o IP:
+
+```bash
+terraform output application_url
+# http://XX.XXX.XXX.XX:8080
+```
+
+**Endpoints**:
+- 🌐 App: `http://IP:8080`
+- ❤️ Health: `http://IP:8080/health`
+- 📚 Swagger: `http://IP:8080/docs/index.html`
+
+### Atualizar a aplicação
+
+Após push de nova imagem no ECR:
+
+```bash
+# SSH na instância
+ssh ec2-user@SEU_IP
+
+# Atualizar (script já criado pelo Terraform)
+sudo /usr/local/bin/update-app.sh
+```
+
+### Monitorar
+
+```bash
+# Via SSH
+ssh ec2-user@SEU_IP
+
+# Ver logs do container
+sudo docker logs -f tc-fiap-customer
+
+# Status do container
+sudo docker ps
+```
+
+### 💰 Custo estimado
+- **EC2 t2.micro**: Grátis (Free Tier) ou ~$8/mês
+- **DynamoDB**: Pay-per-request (~$1-5/mês)
+- **ECR**: ~$0.10/GB/mês
+
+**Total**: ~$0-15/mês
+
+### ⚠️ Renovar credenciais AWS Academy
+
+As credenciais expiram a cada ~3 horas:
+
+1. AWS Academy → AWS Details → Show (novas credenciais)
+2. Atualize `terraform/terraform.tfvars`
+3. Execute:
+   ```bash
+   terraform apply -var="aws_access_key_id=NOVA_KEY" \
+                   -var="aws_secret_access_key=NOVA_SECRET" \
+                   -var="aws_session_token=NOVO_TOKEN"
+   ```
+4. SSH na EC2 e rode: `sudo /usr/local/bin/update-app.sh`
+
+### 🗑️ Destruir recursos
+
+```bash
+cd terraform
+terraform destroy
+```
+
 
 ⚠️ **Importante**: Credenciais AWS Academy expiram em ~3h e precisam ser renovadas periodicamente.
