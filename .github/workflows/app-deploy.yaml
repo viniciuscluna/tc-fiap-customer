@@ -170,7 +170,7 @@ jobs:
         echo "🐳 Using image: $IMAGE_TAG"
         
         # Create update script
-        cat > /tmp/update-app.sh << 'SCRIPT'
+        cat > /tmp/update-app.sh << EOF
 #!/bin/bash
 set -e
 
@@ -196,9 +196,9 @@ docker run -d \
   -e AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} \
   IMAGE_TAG_PLACEHOLDER
 
-echo "✅ Container updated successfully!"
+echo "Container updated successfully!"
 docker ps | grep tc-fiap-customer
-SCRIPT
+EOF
         
         # Replace placeholder with actual image
         sed -i "s|IMAGE_TAG_PLACEHOLDER|$IMAGE_TAG|g" /tmp/update-app.sh
