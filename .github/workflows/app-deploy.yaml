@@ -151,68 +151,36 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ env.AWS_REGION }}
     - name: Deploy to EC2
-      run: |
-        echo "🚀 Starting deployment to EC2..."
-        
-        # Get EC2 instance IP from Terraform outputs
-        cd terraform
-        EC2_IP=$(terraform output -raw ec2_public_ip 2>/dev/null || echo "")
-        
-        if [ -z "$EC2_IP" ]; then
-          echo "❌ EC2 instance not found. Run 'terraform apply' first."
-          exit 1
-        fi
-        
-        echo "📍 EC2 Instance: $EC2_IP"
-        
-        # Get the latest image tag
-        IMAGE_TAG=$(echo "${{ needs.docker.outputs.image_tag }}" | tr ',' '\n' | head -n1 | xargs)
-        echo "🐳 Using image: $IMAGE_TAG"
-        
-        # Create update script
-        cat > /tmp/update-app.sh << EOF
-#!/bin/bash
-set -e
-
-# Login to ECR
-aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
-  docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
-
-# Pull new image
-docker pull IMAGE_TAG_PLACEHOLDER
-
-# Stop old container
-docker stop tc-fiap-customer 2>/dev/null || true
-docker rm tc-fiap-customer 2>/dev/null || true
-
-# Run new container
-docker run -d \
-  --name tc-fiap-customer \
-  --restart unless-stopped \
-  -p 8080:8080 \
-  -e AWS_REGION=${{ env.AWS_REGION }} \
-  -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-  -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-  -e AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} \
-  IMAGE_TAG_PLACEHOLDER
-
-echo "Container updated successfully!"
-docker ps | grep tc-fiap-customer
-EOF
-        
-        # Replace placeholder with actual image
-        sed -i "s|IMAGE_TAG_PLACEHOLDER|$IMAGE_TAG|g" /tmp/update-app.sh
-        
-        # Note: SSH deployment requires key setup
-        # For now, just show the command
-        echo "📝 To deploy manually via SSH:"
-        echo "   scp /tmp/update-app.sh ec2-user@$EC2_IP:/tmp/"
-        echo "   ssh ec2-user@$EC2_IP 'chmod +x /tmp/update-app.sh && sudo /tmp/update-app.sh'"
-        
-        echo "✅ Deployment script created at /tmp/update-app.sh"
-        echo "🌐 Application URL: http://$EC2_IP:8080"
-        echo "📊 Health check: http://$EC2_IP:8080/health"
-        echo "📚 Swagger: http://$EC2_IP:8080/docs/index.html"
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          # Login to ECR
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+            docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+          
+          # Pull latest image
+          docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          
+          # Stop and remove old container
+          docker stop tc-fiap-customer 2>/dev/null || true
+          docker rm tc-fiap-customer 2>/dev/null || true
+          
+          # Run new container
+          docker run -d \
+            --name tc-fiap-customer \
+            --restart unless-stopped \
+            -p 8080:8080 \
+            -e AWS_REGION=${{ env.AWS_REGION }} \
+            -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -e AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} \
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          
+          echo "✅ Container deployed successfully!"
+          docker ps | grep tc-fiap-customer
     
     # ============================================
     # DEPLOY EKS (COMENTADO - Use se tiver cluster EKS)
