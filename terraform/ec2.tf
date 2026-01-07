@@ -142,6 +142,7 @@ resource "aws_instance" "app" {
   instance_type = "t2.micro" # Free tier eligible
   
   vpc_security_group_ids = [aws_security_group.app.id]
+  key_name               = data.aws_key_pair.existing.key_name
   
   user_data = local.user_data
   

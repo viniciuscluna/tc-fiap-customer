@@ -23,6 +23,10 @@ vendor/
 *.tfvars
 !*.tfvars.example
 
+# SSH keys (NEVER commit)
+*.pem
+tc-fiap-customer-key*
+
 # IDE files
 .vscode/
 .idea/
