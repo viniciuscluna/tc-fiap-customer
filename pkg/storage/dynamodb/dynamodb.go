@@ -13,7 +13,7 @@ import (
 
 // Table names constants
 const (
-	CustomerTableName = "Customer"
+	CustomerTableName = "tc-fiap-staging-customer"
 )
 
 // NewDynamoDBClient creates and returns a new DynamoDB client

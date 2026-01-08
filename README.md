@@ -37,11 +37,39 @@ O projeto segue os princípios da Clean Architecture, organizando o código em c
 
 ## Funcionalidades
 
-- Cadastro de clientes (nome, email, CPF)
-- Consulta de cliente por CPF
-- API documentada com Swagger (OpenAPI)
-- Suporte a DynamoDB (AWS e Local)
-- Arquitetura preparada para Kubernetes
+### API REST de Gerenciamento de Clientes
+
+- ✅ **Cadastro de Clientes**: Registre novos clientes com CPF, nome e email
+- ✅ **Consulta por CPF**: Busque informações de clientes pelo CPF
+- ✅ **Validação de Dados**: Validação automática de CPF e campos obrigatórios
+- ✅ **API RESTful**: Interface padronizada seguindo boas práticas REST
+- ✅ **Documentação Swagger**: API totalmente documentada com OpenAPI 3.0
+
+### Infraestrutura e DevOps
+
+- ✅ **AWS DynamoDB**: Banco de dados NoSQL serverless com auto-scaling
+- ✅ **DynamoDB Local**: Suporte para desenvolvimento local sem custos
+- ✅ **Docker & Docker Compose**: Containerização completa da aplicação
+- ✅ **AWS ECS Fargate**: Deploy serverless em containers na AWS
+- ✅ **CI/CD GitHub Actions**: Pipeline automático de build, test e deploy
+- ✅ **Infraestrutura como Código**: Terraform para provisionamento AWS
+- ✅ **Kubernetes Ready**: Manifestos K8s para orquestração em clusters
+
+### Qualidade e Arquitetura
+
+- ✅ **Clean Architecture**: Separação clara de responsabilidades e camadas
+- ✅ **Dependency Injection**: Gerenciamento com Uber FX
+- ✅ **Testes Unitários**: Cobertura de código com testes automatizados
+- ✅ **SonarCloud**: Análise contínua de qualidade de código
+- ✅ **Mocks Automatizados**: Geração de mocks para testes isolados
+- ✅ **Health Checks**: Endpoints de monitoramento de saúde da aplicação
+
+### Banco de Dados
+
+- **Tabela DynamoDB**: `tc-fiap-staging-customer`
+- **Chave de Partição**: CPF (número único do cliente)
+- **Modo de Cobrança**: Pay-per-request (ideal para cargas variáveis)
+- **Criação Automática**: A tabela é criada automaticamente na primeira execução
 
 ## Tecnologias
 
