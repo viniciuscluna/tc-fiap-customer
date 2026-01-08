@@ -27,6 +27,7 @@ Este microserviço faz parte de uma arquitetura de microserviços para gestão d
 
 ### Arquitetura Clean
 
+
 O projeto segue os princípios da Clean Architecture, organizando o código em camadas bem definidas:
 
 - **Domain (Domínio)**: Contém as entidades e regras de negócio centrais
