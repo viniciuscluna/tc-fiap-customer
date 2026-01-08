@@ -124,7 +124,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Tc-Fiap-50",
+	Title:            "Tc-Fiap-Customer",
 	Description:      "Api to manage a fast food restaurant",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

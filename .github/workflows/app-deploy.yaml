@@ -28,7 +28,7 @@ env:
   AWS_REGION: us-east-1
   EKS_CLUSTER_NAME: tc-fiap
   ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
-  ECR_REPOSITORY: tc-fiap-50
+  ECR_REPOSITORY: tc-fiap-customer
 
 jobs:
   # Planning and validation

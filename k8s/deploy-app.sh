@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deploy tc-fiap-50 Application to EKS
+# Deploy tc-fiap-customer Application to EKS
 # This script deploys the application assuming the database is already deployed
 
 set -e
@@ -99,7 +99,7 @@ deploy_secrets() {
 
 # Function to deploy application
 deploy_app() {
-    print_header "Deploying tc-fiap-50 Application"
+    print_header "Deploying tc-fiap-customer Application"
     
     kubectl apply -f app-deployment.yaml
     print_status "✅ Application deployment created"
@@ -145,7 +145,7 @@ show_status() {
 
 # Main execution
 main() {
-    print_header "Starting tc-fiap-50 Application Deployment"
+    print_header "Starting tc-fiap-customer Application Deployment"
     
     # Pre-flight checks
     check_kubectl
@@ -160,7 +160,7 @@ main() {
     # Show status
     show_status
     
-    print_status "🎉 tc-fiap-50 application deployment completed successfully!"
+    print_status "🎉 tc-fiap-customer application deployment completed successfully!"
 }
 
 # Run main function

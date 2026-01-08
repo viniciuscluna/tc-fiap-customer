@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "Api to manage a fast food restaurant",
-        "title": "Tc-Fiap-50",
+        "title": "Tc-Fiap-Customer",
         "contact": {},
         "version": "1.0"
     },

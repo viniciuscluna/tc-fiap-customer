@@ -12,7 +12,7 @@ import (
 	"github.com/viniciuscluna/tc-fiap-customer/internal/app"
 )
 
-// @title           Tc-Fiap-50
+// @title           Tc-Fiap-Customer
 // @version         1.0
 // @description     Api to manage a fast food restaurant
 // @host            localhost:8080

@@ -29,7 +29,7 @@ host: localhost:8080
 info:
   contact: {}
   description: Api to manage a fast food restaurant
-  title: Tc-Fiap-50
+  title: Tc-Fiap-Customer
   version: "1.0"
 paths:
   /v1/customer:
