@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 )
 
 // Table names constants
@@ -16,7 +17,7 @@ const (
 )
 
 // NewDynamoDBClient creates and returns a new DynamoDB client
-func NewDynamoDBClient() *dynamodb.DynamoDB {
+func NewDynamoDBClient() dynamodbiface.DynamoDBAPI {
 	// Get AWS configuration from environment variables
 	region := os.Getenv("AWS_REGION")
 	if region == "" {
