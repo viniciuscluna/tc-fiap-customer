@@ -118,7 +118,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}
+        images: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
