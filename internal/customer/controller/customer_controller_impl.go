@@ -29,7 +29,7 @@ func NewCustomerControllerImpl(
 	}
 }
 
-func (c *CustomerControllerImpl) GetByCpf(cpf uint) (*dto.GetCustomerResponseDto, error) {
+func (c *CustomerControllerImpl) GetByCpf(cpf string) (*dto.GetCustomerResponseDto, error) {
 	customer, err := c.getByCpfUseCase.Execute(commands.NewGetCustomerByCpfCommand(cpf))
 	if err != nil {
 		return nil, err

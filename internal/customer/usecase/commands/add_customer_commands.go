@@ -3,10 +3,10 @@ package commands
 type AddCustomerCommand struct {
 	Name  string
 	Email string
-	CPF   uint
+	CPF   string
 }
 
-func NewAddCustomerCommand(name string, email string, cpf uint) *AddCustomerCommand {
+func NewAddCustomerCommand(name string, email string, cpf string) *AddCustomerCommand {
 	return &AddCustomerCommand{
 		Name:  name,
 		Email: email,

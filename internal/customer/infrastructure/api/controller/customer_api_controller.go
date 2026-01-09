@@ -42,13 +42,7 @@ func (h *customerApiController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cpfInt, err := strconv.ParseUint(cpf, 10, 64)
-	if err != nil {
-		http.Error(w, `{"error":"Invalid CPF format"}`, http.StatusBadRequest)
-		return
-	}
-
-	customer, err := h.controller.GetByCpf(uint(cpfInt))
+	customer, err := h.controller.GetByCpf(cpf)
 
 	if err != nil {
 		if err.Error() == "customer not found" {

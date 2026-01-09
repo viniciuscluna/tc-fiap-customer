@@ -26,12 +26,12 @@ func NewCustomerRepositoryImpl(db dynamodbiface.DynamoDBAPI) *CustomerRepository
 	return &CustomerRepositoryImpl{db: db}
 }
 
-func (r *CustomerRepositoryImpl) GetByCpf(cpf uint) (*entities.Customer, error) {
+func (r *CustomerRepositoryImpl) GetByCpf(cpf string) (*entities.Customer, error) {
 	result, err := r.db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(dynamodbpkg.CustomerTableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"cpf": {
-				N: aws.String(strconv.FormatUint(uint64(cpf), 10)),
+				S: aws.String(cpf),
 			},
 		},
 	})

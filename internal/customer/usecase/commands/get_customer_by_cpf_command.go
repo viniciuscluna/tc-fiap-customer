@@ -1,10 +1,10 @@
 package commands
 
 type GetCustomerByCpfCommand struct {
-	Cpf uint
+	CPF string
 }
 
-func NewGetCustomerByCpfCommand(cpf uint) *GetCustomerByCpfCommand {
+func NewGetCustomerByCpfCommand(cpf string) *GetCustomerByCpfCommand {
 	return &GetCustomerByCpfCommand{
 		Cpf: cpf,
 	}
