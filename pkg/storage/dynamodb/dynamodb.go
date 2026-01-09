@@ -37,6 +37,7 @@ func NewDynamoDBClient() dynamodbiface.DynamoDBAPI {
 	endpoint := os.Getenv("DYNAMODB_ENDPOINT")
 	awsAccessKey := os.Getenv("AWS_ACCESS_KEY_ID")
 	awsSecretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+	awsSessionToken := os.Getenv("AWS_SESSION_TOKEN")
 
 	// Configure AWS session
 	awsConfig := &aws.Config{
@@ -55,7 +56,7 @@ func NewDynamoDBClient() dynamodbiface.DynamoDBAPI {
 
 	// If credentials are provided, use them
 	if awsAccessKey != "" && awsSecretKey != "" {
-		awsConfig.Credentials = credentials.NewStaticCredentials(awsAccessKey, awsSecretKey, "")
+		awsConfig.Credentials = credentials.NewStaticCredentials(awsAccessKey, awsSecretKey, awsSessionToken)
 	}
 
 	// Create AWS session
