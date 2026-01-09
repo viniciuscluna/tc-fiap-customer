@@ -13,8 +13,18 @@ import (
 
 // Table names constants
 const (
-	CustomerTableName = "tc-fiap-staging-customer"
+	DefaultCustomerTableName = "tc-fiap-staging-customer"
 )
+
+var CustomerTableName = getTableName()
+
+func getTableName() string {
+	tableName := os.Getenv("DYNAMODB_TABLE_NAME")
+	if tableName == "" {
+		return DefaultCustomerTableName
+	}
+	return tableName
+}
 
 // NewDynamoDBClient creates and returns a new DynamoDB client
 func NewDynamoDBClient() dynamodbiface.DynamoDBAPI {
