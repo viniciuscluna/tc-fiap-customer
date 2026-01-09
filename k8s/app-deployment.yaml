@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-deployment
+  name: customer-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: my-app
+      app: customer-service
   template:
     metadata:
       labels:
-        app: my-app
+        app: customer-service
     spec:
       containers:
-        - name: my-app-container
-          image: 687620679899.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-customer:latest
+        - name: customer-service
+          image: 939458930010.dkr.ecr.us-east-1.amazonaws.com/tc-fiap-customer:latest
           imagePullPolicy: Always
           resources:
             requests:
