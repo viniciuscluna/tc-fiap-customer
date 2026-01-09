@@ -13,7 +13,7 @@ import (
 
 // Table names constants
 const (
-	DefaultCustomerTableName = "tc-fiap-staging-customer"
+	DefaultCustomerTableName = "tc-fiap-production-customer"
 )
 
 var CustomerTableName = getTableName()
