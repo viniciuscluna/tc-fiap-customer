@@ -19,7 +19,7 @@ func NewGetByCpfUseCaseImpl(customerRepository repositories.CustomerRepository) 
 }
 
 func (u *GetByCpfUseCaseImpl) Execute(command *commands.GetCustomerByCpfCommand) (*entities.Customer, error) {
-	entity, err := u.customerRepository.GetByCpf(command.Cpf)
+	entity, err := u.customerRepository.GetByCpf(command.CPF)
 	if err != nil {
 		return nil, err
 	}

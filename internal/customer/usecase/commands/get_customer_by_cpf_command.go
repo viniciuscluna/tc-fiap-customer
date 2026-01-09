@@ -6,6 +6,6 @@ type GetCustomerByCpfCommand struct {
 
 func NewGetCustomerByCpfCommand(cpf string) *GetCustomerByCpfCommand {
 	return &GetCustomerByCpfCommand{
-		Cpf: cpf,
+		CPF: cpf,
 	}
 }

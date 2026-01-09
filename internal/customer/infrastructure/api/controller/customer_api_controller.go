@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	customerController "github.com/viniciuscluna/tc-fiap-customer/internal/customer/controller"

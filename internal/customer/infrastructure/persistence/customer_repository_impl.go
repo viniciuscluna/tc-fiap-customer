@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
