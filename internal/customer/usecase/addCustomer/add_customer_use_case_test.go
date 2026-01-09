@@ -32,7 +32,7 @@ func TestAddCustomerUseCaseTestSuite(t *testing.T) {
 
 func (suite *AddCustomerUseCaseTestSuite) Test_CustomerRegistration_WithValidInformation_ShouldPersistSuccessfully() {
 	// GIVEN a customer with valid name, email, and CPF
-	command := commands.NewAddCustomerCommand("John Doe", "john@example.com", 12345678901)
+	command := commands.NewAddCustomerCommand("John Doe", "john@example.com", "12345678901")
 
 	expectedCustomer := &entities.Customer{
 		Name:  command.Name,
@@ -56,7 +56,7 @@ func (suite *AddCustomerUseCaseTestSuite) Test_CustomerRegistration_WithValidInf
 
 func (suite *AddCustomerUseCaseTestSuite) Test_CustomerRegistration_WithRepositoryFailure_ShouldReturnError() {
 	// GIVEN a customer registration request
-	command := commands.NewAddCustomerCommand("Jane Doe", "jane@example.com", 98765432109)
+	command := commands.NewAddCustomerCommand("Jane Doe", "jane@example.com", "98765432109")
 
 	expectedCustomer := &entities.Customer{
 		Name:  command.Name,
@@ -85,7 +85,7 @@ func (suite *AddCustomerUseCaseTestSuite) Test_CustomerRegistration_WithReposito
 
 func (suite *AddCustomerUseCaseTestSuite) Test_CustomerRegistration_WithEmptyData_ShouldAcceptAndPersist() {
 	// GIVEN a customer registration request with empty data
-	command := commands.NewAddCustomerCommand("", "", 0)
+	command := commands.NewAddCustomerCommand("", "", "0")
 
 	expectedCustomer := &entities.Customer{
 		Name:  command.Name,

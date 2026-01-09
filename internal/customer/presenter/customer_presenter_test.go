@@ -31,7 +31,7 @@ func (suite *CustomerPresenterTestSuite) Test_CustomerPresentation_WithValidCust
 	now := time.Now()
 	customer := &entities.Customer{
 		ID:        "123-456",
-		CPF:       12345678901,
+		CPF: "12345678901",
 		Name:      "John Doe",
 		Email:     "john@example.com",
 		CreatedAt: now,
@@ -54,7 +54,7 @@ func (suite *CustomerPresenterTestSuite) Test_CustomerPresentation_WithEmptyFiel
 	// GIVEN a customer entity with empty/zero fields
 	customer := &entities.Customer{
 		ID:        "",
-		CPF:       0,
+		CPF: "0",
 		Name:      "",
 		Email:     "",
 		CreatedAt: time.Time{},
@@ -67,7 +67,7 @@ func (suite *CustomerPresenterTestSuite) Test_CustomerPresentation_WithEmptyFiel
 	assert.NotNil(suite.T(), dto)
 	// AND empty fields should remain empty in the DTO
 	assert.Empty(suite.T(), dto.ID)
-	assert.Equal(suite.T(), uint(0), dto.CPF)
+	assert.Equal(suite.T(), "0", dto.CPF)
 	assert.Empty(suite.T(), dto.Name)
 	assert.Empty(suite.T(), dto.Email)
 	assert.True(suite.T(), dto.CreatedAt.IsZero())
@@ -78,7 +78,7 @@ func (suite *CustomerPresenterTestSuite) Test_CustomerPresentation_WithAlternati
 	now := time.Now()
 	customer := &entities.Customer{
 		ID:        "abc-123",
-		CPF:       98765432100,
+		CPF: "98765432100",
 		Name:      "Jane Smith",
 		Email:     "jane.smith@test.com",
 		CreatedAt: now,
@@ -91,7 +91,7 @@ func (suite *CustomerPresenterTestSuite) Test_CustomerPresentation_WithAlternati
 	assert.NotNil(suite.T(), dto)
 	// AND all fields should be accurately transformed
 	assert.Equal(suite.T(), "abc-123", dto.ID)
-	assert.Equal(suite.T(), uint(98765432100), dto.CPF)
+	assert.Equal(suite.T(), "98765432100", dto.CPF)
 	assert.Equal(suite.T(), "Jane Smith", dto.Name)
 	assert.Equal(suite.T(), "jane.smith@test.com", dto.Email)
 	assert.Equal(suite.T(), now, dto.CreatedAt)

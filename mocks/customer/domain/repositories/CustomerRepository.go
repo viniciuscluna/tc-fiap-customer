@@ -67,7 +67,7 @@ func (_c *MockCustomerRepository_Add_Call) RunAndReturn(run func(*entities.Custo
 }
 
 // GetByCpf provides a mock function with given fields: cpf
-func (_m *MockCustomerRepository) GetByCpf(cpf uint) (*entities.Customer, error) {
+func (_m *MockCustomerRepository) GetByCpf(cpf string) (*entities.Customer, error) {
 	ret := _m.Called(cpf)
 
 	if len(ret) == 0 {
@@ -76,10 +76,10 @@ func (_m *MockCustomerRepository) GetByCpf(cpf uint) (*entities.Customer, error)
 
 	var r0 *entities.Customer
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint) (*entities.Customer, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (*entities.Customer, error)); ok {
 		return rf(cpf)
 	}
-	if rf, ok := ret.Get(0).(func(uint) *entities.Customer); ok {
+	if rf, ok := ret.Get(0).(func(string) *entities.Customer); ok {
 		r0 = rf(cpf)
 	} else {
 		if ret.Get(0) != nil {
@@ -87,7 +87,7 @@ func (_m *MockCustomerRepository) GetByCpf(cpf uint) (*entities.Customer, error)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(uint) error); ok {
+	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(cpf)
 	} else {
 		r1 = ret.Error(1)
@@ -102,14 +102,14 @@ type MockCustomerRepository_GetByCpf_Call struct {
 }
 
 // GetByCpf is a helper method to define mock.On call
-//   - cpf uint
+//   - cpf string
 func (_e *MockCustomerRepository_Expecter) GetByCpf(cpf interface{}) *MockCustomerRepository_GetByCpf_Call {
 	return &MockCustomerRepository_GetByCpf_Call{Call: _e.mock.On("GetByCpf", cpf)}
 }
 
-func (_c *MockCustomerRepository_GetByCpf_Call) Run(run func(cpf uint)) *MockCustomerRepository_GetByCpf_Call {
+func (_c *MockCustomerRepository_GetByCpf_Call) Run(run func(cpf string)) *MockCustomerRepository_GetByCpf_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(uint))
+		run(args[0].(string))
 	})
 	return _c
 }
@@ -119,7 +119,7 @@ func (_c *MockCustomerRepository_GetByCpf_Call) Return(_a0 *entities.Customer, _
 	return _c
 }
 
-func (_c *MockCustomerRepository_GetByCpf_Call) RunAndReturn(run func(uint) (*entities.Customer, error)) *MockCustomerRepository_GetByCpf_Call {
+func (_c *MockCustomerRepository_GetByCpf_Call) RunAndReturn(run func(string) (*entities.Customer, error)) *MockCustomerRepository_GetByCpf_Call {
 	_c.Call.Return(run)
 	return _c
 }

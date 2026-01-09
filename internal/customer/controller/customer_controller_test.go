@@ -45,7 +45,7 @@ func TestCustomerControllerTestSuite(t *testing.T) {
 
 func (suite *CustomerControllerTestSuite) Test_CustomerRetrieval_WithValidCPF_ShouldReturnPresentedCustomerSuccessfully() {
 	// GIVEN a valid CPF and an existing customer
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 	now := time.Now()
 
 	customerEntity := &entities.Customer{
@@ -92,7 +92,7 @@ func (suite *CustomerControllerTestSuite) Test_CustomerRetrieval_WithValidCPF_Sh
 
 func (suite *CustomerControllerTestSuite) Test_CustomerRetrieval_WithNonExistentCPF_ShouldReturnError() {
 	// GIVEN a CPF for a non-existent customer
-	cpf := uint(99999999999)
+	cpf := "99999999999"
 	expectedError := errors.New("customer not found")
 
 	suite.mockGetByCpfUseCase.EXPECT().
@@ -121,7 +121,7 @@ func (suite *CustomerControllerTestSuite) Test_CustomerRegistration_WithValidReq
 	requestDto := &dto.AddCustomerRequestDto{
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
-		CPF:   98765432109,
+		CPF: "98765432109",
 	}
 
 	suite.mockAddCustomerUseCase.EXPECT().
@@ -143,7 +143,7 @@ func (suite *CustomerControllerTestSuite) Test_CustomerRegistration_WithUseCaseF
 	requestDto := &dto.AddCustomerRequestDto{
 		Name:  "John Smith",
 		Email: "john.smith@example.com",
-		CPF:   11111111111,
+		CPF: "11111111111",
 	}
 
 	// AND the use case fails with a database error

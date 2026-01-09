@@ -56,7 +56,7 @@ func TestCustomerRepositoryTestSuite(t *testing.T) {
 
 func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithExistingCPF_ShouldReturnCustomerFromDynamoDB() {
 	// GIVEN a customer exists in DynamoDB with CPF 12345678901
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 	expectedCustomer := &entities.Customer{
 		ID:    "test-id-123",
 		CPF:   cpf,
@@ -92,7 +92,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithExistingCPF
 
 func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithNonExistentCPF_ShouldReturnNotFoundError() {
 	// GIVEN a CPF for a customer that does not exist in DynamoDB
-	cpf := uint(99999999999)
+	cpf := "99999999999"
 	output := &dynamodb.GetItemOutput{
 		Item: nil, // Empty result
 	}
@@ -114,7 +114,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithNonExistent
 
 func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithDynamoDBError_ShouldReturnError() {
 	// GIVEN a CPF for a customer lookup
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 	// AND DynamoDB encounters a connection error
 	expectedError := errors.New("DynamoDB connection error")
 
@@ -140,7 +140,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithDynamoDBErr
 func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithValidCustomer_ShouldSaveToDynamoDBSuccessfully() {
 	// GIVEN a valid customer entity to be persisted
 	customer := &entities.Customer{
-		CPF:   12345678901,
+		CPF: "12345678901",
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
 	}
@@ -162,7 +162,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithValidCust
 func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithDynamoDBError_ShouldReturnError() {
 	// GIVEN a valid customer entity to be persisted
 	customer := &entities.Customer{
-		CPF:   12345678901,
+		CPF: "12345678901",
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
 	}
@@ -187,7 +187,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithProvidedI
 	// GIVEN a customer entity with an existing ID
 	customer := &entities.Customer{
 		ID:    "existing-id",
-		CPF:   12345678901,
+		CPF: "12345678901",
 		Name:  "Jane Doe",
 		Email: "jane@example.com",
 	}
@@ -210,7 +210,7 @@ func (suite *CustomerRepositoryTestSuite) Test_CustomerPersistence_WithProvidedI
 
 func (suite *CustomerRepositoryTestSuite) Test_CustomerRetrieval_WithUnmarshalError_ShouldReturnError() {
 	// GIVEN a CPF for a customer lookup
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 
 	// AND DynamoDB returns an item with invalid structure for unmarshaling
 	// e.g. CPF is expected to be uint, but we return a complex map that can't be converted

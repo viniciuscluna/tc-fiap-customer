@@ -33,7 +33,7 @@ func TestGetByCpfUseCaseTestSuite(t *testing.T) {
 
 func (suite *GetByCpfUseCaseTestSuite) Test_CustomerRetrieval_WithExistingCPF_ShouldReturnCustomerSuccessfully() {
 	// GIVEN an existing customer with CPF 12345678901
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 	command := commands.NewGetCustomerByCpfCommand(cpf)
 
 	expectedCustomer := &entities.Customer{
@@ -66,7 +66,7 @@ func (suite *GetByCpfUseCaseTestSuite) Test_CustomerRetrieval_WithExistingCPF_Sh
 
 func (suite *GetByCpfUseCaseTestSuite) Test_CustomerRetrieval_WithNonExistentCPF_ShouldReturnError() {
 	// GIVEN a CPF that does not exist in the system
-	cpf := uint(99999999999)
+	cpf := "99999999999"
 	command := commands.NewGetCustomerByCpfCommand(cpf)
 
 	expectedError := errors.New("customer not found")
@@ -91,7 +91,7 @@ func (suite *GetByCpfUseCaseTestSuite) Test_CustomerRetrieval_WithNonExistentCPF
 
 func (suite *GetByCpfUseCaseTestSuite) Test_CustomerRetrieval_WithRepositoryFailure_ShouldReturnError() {
 	// GIVEN a customer retrieval request
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 	command := commands.NewGetCustomerByCpfCommand(cpf)
 
 	// AND the repository fails with a database connection error

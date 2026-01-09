@@ -11,7 +11,7 @@ func TestNewAddCustomerCommand(t *testing.T) {
 	// GIVEN valid customer data
 	name := "John Doe"
 	email := "john@example.com"
-	cpf := uint(12345678901)
+	cpf := "12345678901"
 
 	// WHEN creating a new AddCustomerCommand
 	command := commands.NewAddCustomerCommand(name, email, cpf)

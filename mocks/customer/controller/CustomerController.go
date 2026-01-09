@@ -67,7 +67,7 @@ func (_c *MockCustomerController_Add_Call) RunAndReturn(run func(*dto.AddCustome
 }
 
 // GetByCpf provides a mock function with given fields: cpf
-func (_m *MockCustomerController) GetByCpf(cpf uint) (*dto.GetCustomerResponseDto, error) {
+func (_m *MockCustomerController) GetByCpf(cpf string) (*dto.GetCustomerResponseDto, error) {
 	ret := _m.Called(cpf)
 
 	if len(ret) == 0 {
@@ -76,10 +76,10 @@ func (_m *MockCustomerController) GetByCpf(cpf uint) (*dto.GetCustomerResponseDt
 
 	var r0 *dto.GetCustomerResponseDto
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint) (*dto.GetCustomerResponseDto, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (*dto.GetCustomerResponseDto, error)); ok {
 		return rf(cpf)
 	}
-	if rf, ok := ret.Get(0).(func(uint) *dto.GetCustomerResponseDto); ok {
+	if rf, ok := ret.Get(0).(func(string) *dto.GetCustomerResponseDto); ok {
 		r0 = rf(cpf)
 	} else {
 		if ret.Get(0) != nil {
@@ -87,7 +87,7 @@ func (_m *MockCustomerController) GetByCpf(cpf uint) (*dto.GetCustomerResponseDt
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(uint) error); ok {
+	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(cpf)
 	} else {
 		r1 = ret.Error(1)
@@ -102,14 +102,14 @@ type MockCustomerController_GetByCpf_Call struct {
 }
 
 // GetByCpf is a helper method to define mock.On call
-//   - cpf uint
+//   - cpf string
 func (_e *MockCustomerController_Expecter) GetByCpf(cpf interface{}) *MockCustomerController_GetByCpf_Call {
 	return &MockCustomerController_GetByCpf_Call{Call: _e.mock.On("GetByCpf", cpf)}
 }
 
-func (_c *MockCustomerController_GetByCpf_Call) Run(run func(cpf uint)) *MockCustomerController_GetByCpf_Call {
+func (_c *MockCustomerController_GetByCpf_Call) Run(run func(cpf string)) *MockCustomerController_GetByCpf_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(uint))
+		run(args[0].(string))
 	})
 	return _c
 }
@@ -119,7 +119,7 @@ func (_c *MockCustomerController_GetByCpf_Call) Return(_a0 *dto.GetCustomerRespo
 	return _c
 }
 
-func (_c *MockCustomerController_GetByCpf_Call) RunAndReturn(run func(uint) (*dto.GetCustomerResponseDto, error)) *MockCustomerController_GetByCpf_Call {
+func (_c *MockCustomerController_GetByCpf_Call) RunAndReturn(run func(string) (*dto.GetCustomerResponseDto, error)) *MockCustomerController_GetByCpf_Call {
 	_c.Call.Return(run)
 	return _c
 }
