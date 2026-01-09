@@ -30,7 +30,7 @@ func (r *CustomerRepositoryImpl) GetByCpf(cpf uint) (*entities.Customer, error) 
 	result, err := r.db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(dynamodbpkg.CustomerTableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"CPF": {
+			"cpf": {
 				N: aws.String(strconv.FormatUint(uint64(cpf), 10)),
 			},
 		},
